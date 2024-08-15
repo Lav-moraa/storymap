@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Map of Mining Sites in Kenya</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #000051;
+      color: #fff;
+    }
+    #map {
+      height: 600px;
+      margin-top: 20px;
+    }
+    .popup-content {
+      font-size: 16px;
+    }
+    .popup-image {
+      max-width: 150px;
+      max-height: 100px;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .navbar {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Mining Sites Story Map</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card text-dark">
+          <div class="card-header">
+            <h5>About the Map</h5>
+          </div>
+          <div class="card-body">
+            <p>This map highlights key mining sites in Kenya, providing information on their location and significance. Each marker includes an image and a brief description of the site.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <h1>Story Map of Mining Sites in Kenya</h1>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Initialize the map
+    const map = L.map('map').setView([-1.286389, 36.817223], 6);
+
+    // Add a tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Mining site data with images
+    const miningData = [
+      {
+        name: "Kakamega Gold Mine",
+        lat: -0.304902,
+        lon: 34.750148,
+        description: "A significant gold mining site in Kakamega.",
+        image: "kakamega.jpeg"
+      },
+      {
+        name: "Kwale Titanium Mine",
+        lat: -4.390462,
+        lon: 39.550099,
+        description: "One of the largest titanium mining operations in Kenya.",
+        image: "kwale.jpeg"
+      },
+      {
+        name: "Marble Mining in Kitui",
+        lat: -1.316874,
+        lon: 38.061056,
+        description: "A prominent marble mining site in Kitui.",
+        image: "kitui.jpeg"
+      },
+      {
+        name: "Taita Hills Gold Mine",
+        lat: -3.444649,
+        lon: 38.470663,
+        description: "Gold mining activities in the Taita Hills region.",
+        image: "taita.jpeg"
+      },
+      {
+        name: "Samburu Iron Ore Mine",
+        lat: 1.485226,
+        lon: 37.575451,
+        description: "Iron ore extraction site in Samburu.",
+        image: "samburu.jpeg"
+      },
+      {
+        name: "Tharaka Nithi Gemstone Mine",
+        lat: -0.305028,
+        lon: 37.797165,
+        description: "A notable site for gemstone mining in Tharaka Nithi.",
+        image: "tharaka.jpeg"
+      }
+    ];
+
+    // Add markers for mining sites with image popups
+    miningData.forEach(site => {
+      const marker = L.marker([site.lat, site.lon]).addTo(map);
+      marker.bindPopup(`
+        <strong>${site.name}</strong><br>
+        <img src="${site.image}" alt="${site.name}" class="popup-image"><br>
+        ${site.description}
+      `);
+    });
+
+    // // Optional: Add an event listener for story map interactions
+    // map.on('click', function(e) {
+    //   alert('Clicked on map at: ' + e.latlng);
+    // });
+  </script>
+</body>
+</html>
