@@ -7,52 +7,82 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    body {
-      background-color: #000051;
-      color: #fff;
+    .b-shadow {
+      box-shadow: 1px 1px 1px 1px grey;
     }
+
+    body {
+      background-color: white;
+      color: #000;
+    }
+
     #map {
       height: 600px;
       margin-top: 20px;
     }
+
     .popup-content {
       font-size: 16px;
     }
+
     .popup-image {
       max-width: 150px;
       max-height: 100px;
       display: block;
       margin-bottom: 10px;
     }
+
     .navbar {
       margin-bottom: 20px;
     }
+
+    .hospital-card {
+      cursor: pointer;
+      margin-bottom: 15px; /* Space between cards */
+    }
+
+    .card-container {
+      height: 100vh;
+      overflow-y: auto;
+      padding-right: 15px; /* Add some padding to avoid scrollbar overlap */
+    }
   </style>
 </head>
-<body>
+<body >
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Mining Sites Story Map</a>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #000051;">
+    <a class="navbar-brand w-100 text-center" href="#">Mining Sites Story Map</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>
 
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-4">
-        <div class="card text-dark">
-          <div class="card-header">
-            <h5>About the Map</h5>
-          </div>
-          <div class="card-body">
-            <p>This map highlights key mining sites in Kenya, providing information on their location and significance. Each marker includes an image and a brief description of the site.</p>
-          </div>
+      <!-- Mining Site Cards -->
+      
+      <!-- Map -->
+      <div class="col-lg-6">
+        <div id="map"></div>
+      </div>
+
+      
+
+      <div class="col-lg-3 card-container">
+        <div class="d-flex flex-column">
+          <!-- Cards will be dynamically added here -->
         </div>
       </div>
-      <div class="col-lg-8">
-        <h1>Story Map of Mining Sites in Kenya</h1>
-        <div id="map"></div>
+
+      <div class="col-lg-3">
+        <div class="card text-dark">
+            <div class="card-header">
+                <h5>About the Map</h5>
+            </div>
+            <div class="card-body">
+                <p>This map highlights key mining sites in Kenya, providing information on their location and significance. Each marker includes an image and a brief description of the site.</p>
+            </div>
+        </div>
       </div>
     </div>
   </div>
@@ -116,6 +146,32 @@
       }
     ];
 
+    // Add mining site cards
+    const cardContainer = document.querySelector('.d-flex.flex-column');
+    miningData.forEach(site => {
+      const card = document.createElement('div');
+      card.classList.add('card', 'hospital-card', 'bg-primary', 'b-shadow');
+      card.innerHTML = `
+        <img src="${site.image}" class="card-img-top" alt="${site.name}">
+        <div class="card-body">
+          <h5 class="card-title">${site.name}</h5>
+          <p class="card-text">${site.description}</p>
+        </div>
+      `;
+      card.addEventListener('click', () => {
+        map.setView([site.lat, site.lon], 14);
+        L.popup()
+          .setLatLng([site.lat, site.lon])
+          .setContent(`
+            <strong>${site.name}</strong><br>
+            <img src="${site.image}" alt="${site.name}" class="popup-image"><br>
+            ${site.description}
+          `)
+          .openOn(map);
+      });
+      cardContainer.appendChild(card);
+    });
+
     // Add markers for mining sites with image popups
     miningData.forEach(site => {
       const marker = L.marker([site.lat, site.lon]).addTo(map);
@@ -125,11 +181,6 @@
         ${site.description}
       `);
     });
-
-    // // Optional: Add an event listener for story map interactions
-    // map.on('click', function(e) {
-    //   alert('Clicked on map at: ' + e.latlng);
-    // });
   </script>
 </body>
 </html>
